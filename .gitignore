@@ -6,6 +6,12 @@
 Homestead.json
 Homestead.yaml
 .env
-.env.testing
 .phpintel
 composer.lock
+npm-debug.log
+/.phpcomplete_extended
+.env.testing
+.env.dusk.local
+docker.env
+/storage/framework/testing
+.vscode

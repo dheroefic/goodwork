@@ -2,18 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Services\OfficeService;
+use App\Repositories\TeamRepository;
+use App\Repositories\ProjectRepository;
 
 class HomeController extends Controller
 {
+    protected $projectRepository;
+    protected $teamRepository;
+    protected $officeService;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ProjectRepository $projectRepository, TeamRepository $teamRepository, OfficeService $officeService)
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
+        $this->projectRepository = $projectRepository;
+        $this->teamRepository = $teamRepository;
+        $this->officeService = $officeService;
     }
 
     /**
@@ -23,6 +32,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $projects = $this->projectRepository->getLatestProjects(5);
+        $teams = $this->teamRepository->getLatestTeams(5);
+        $offices = $this->officeService->getLatestThreeOffice()->toArray();
+        $projects->load('members');
+        $teams->load('members');
+
+        return view('home', compact('projects', 'teams', 'offices'));
     }
 }

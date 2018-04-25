@@ -5,29 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'GOODWORK') }} | {{ $title }}</title>
 
-    <!-- Styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300,400,600">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    @yield('style')
 
-    <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+    @if (!Auth::guest())
+    <script>
+        window.navbar = {!! json_encode([
+            'user' => Auth::user(),
+            'navUrl' => ['site' => url('/'), 'logout' => url('/logout')]
+        ]) !!};
+    </script>
+    @endif
+
+    <script defer src="{{ asset('js/fontawesome-all.min.js') }}" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg-grey-lighter">
     <div id="app">
-        @include('partials.navbar')
+        <div class="h-1" style="background: linear-gradient(to right, #4DC0B5, #3490DC);"></div>
+        @if (!Auth::guest())
+        <navbar></navbar>
+        <invite-modal></invite-modal>
+        @endif
 
         {{ $slot }}
     </div>
-    <!-- Scripts -->
+
     {{ $script }}
 </body>
 </html>
